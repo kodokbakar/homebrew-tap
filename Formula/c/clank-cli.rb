@@ -1,7 +1,6 @@
 class ClankCli < Formula
   desc "HTTP load testing CLI tool built with Rust"
   homepage "https://github.com/kodokbakar/clank-cli"
-  version "0.1.0"
   license "MIT"
 
   on_macos do
