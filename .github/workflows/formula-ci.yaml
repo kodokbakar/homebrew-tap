@@ -1,0 +1,39 @@
+name: Formula CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: Validate Homebrew formula
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout tap repository
+        uses: actions/checkout@v4
+
+      - name: Check formula syntax
+        run: ruby -c Formula/c/clank-cli.rb
+
+      - name: Tap local repository
+        run: brew tap kodokbakar/tap "$GITHUB_WORKSPACE"
+
+      - name: Audit formula
+        run: brew audit --strict --online kodokbakar/tap/clank-cli
+
+      - name: Install formula
+        run: brew install kodokbakar/tap/clank-cli
+
+      - name: Test formula
+        run: brew test kodokbakar/tap/clank-cli
+
+      - name: Check installed binary
+        run: |
+          clank-cli --version
+          clank-cli --help
